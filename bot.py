@@ -27,7 +27,6 @@ gif = [
     'https://telegra.ph/file/b4834b434888de522fa49.mp4'
 ]
 
-
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Main process ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @app.on_chat_join_request(filters.group | filters.channel & ~filters.private)
@@ -38,13 +37,21 @@ async def approve(_, m : Message):
         add_group(m.chat.id)
         await app.approve_chat_join_request(op.id, kk.id)
         img = random.choice(gif)
-        await app.send_video(kk.id,img, "**Hello {}!\nWelcome To {}\n\n__Powerd By : @Tech_Shreyansh29__**".format(m.from_user.mention, m.chat.title))
+        # Add an inline keyboard button for "Updated Channel"
+        keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton("📢 Updated Channel", url="https://t.me/Tech_Shreyansh")
+                ]
+            ]
+        )
+        await app.send_video(kk.id, img, f"**Hello {kk.mention}!\nWelcome To {op.title}\n\n__Powerd By : @Tech_Shreyansh29__**", reply_markup=keyboard)
         add_user(kk.id)
     except errors.PeerIdInvalid as e:
-        print("user isn't start bot(means group)")
+        print("User hasn't started the bot (private chat).")
     except Exception as err:
         print(str(err))    
- 
+
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Start ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @app.on_message(filters.command("start"))
@@ -87,7 +94,35 @@ async def op(_, m :Message):
         )
         await m.reply_text("**⚠️Access Denied!⚠️\n\nPlease Join @{} to use me.If you joined click check again button to confirm.**".format(cfg.FSUB), reply_markup=key)
 
-#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ callback ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Disclaimer Command ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@app.on_message(filters.command("disclaimer"))
+async def disclaimer(_, m : Message):
+    disclaimer_text = """
+📢 **Disclaimer – Auto Approve Join Request Bot**
+
+🔹 This bot is an automated system that approves join requests in Telegram channels/groups based on predefined rules. By using this bot, you acknowledge and agree to the following:
+
+✅ **No Liability**
+The bot owner & developers are not responsible for any unauthorized access, spam, or misuse. Channel/Group admins must configure settings responsibly.
+
+🤖 **Automated Decisions**
+The bot works automatically based on set criteria. It does not verify user intent or guarantee member authenticity.
+
+🔧 **Admin Responsibility**
+Channel/Group admins are fully responsible for moderation. The bot only accepts requests and does not enforce any additional rules.
+
+🚫 **No Responsibility for Content**
+The bot does not control, monitor, or endorse any messages, media, or content posted in the group/channel. The channel admins and users are solely responsible for all content shared. The bot owner & developers cannot be held accountable for any violations, illegal content, or disputes arising in the channel/group.
+
+🔒 **Privacy Notice**
+The bot does not store or share personal data beyond what’s needed for join request processing.
+
+📌 **Ensure responsible usage to keep your channel/group secure!**
+    """
+    await m.reply_text(disclaimer_text, disable_web_page_preview=True)
+
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Callback ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @app.on_callback_query(filters.regex("chk"))
 async def chk(_, cb : CallbackQuery):
@@ -110,7 +145,7 @@ async def chk(_, cb : CallbackQuery):
     except UserNotParticipant:
         await cb.answer("🙅‍♂️ You are not joined to channel join and try again. 🙅‍♂️")
 
-#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ info ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Info ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @app.on_message(filters.command("users") & filters.user(cfg.SUDO))
 async def dbtool(_, m : Message):
