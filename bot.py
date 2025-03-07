@@ -45,7 +45,7 @@ async def approve(_, m : Message):
                 ]
             ]
         )
-        await app.send_video(kk.id, img, f"**Hello {kk.mention}!\nWelcome To {op.title}\n\n__Powerd By : @Tech_Shreyansh29__**", reply_markup=keyboard)
+        await app.send_video(kk.id, img, f"**Hello {kk.mention}!\nWelcome To {op.title}\n\nClick /start to know more.\n\n__Powerd By : @Tech_Shreyansh29__**", reply_markup=keyboard)
         add_user(kk.id)
     except errors.PeerIdInvalid as e:
         print("User hasn't started the bot (private chat).")
