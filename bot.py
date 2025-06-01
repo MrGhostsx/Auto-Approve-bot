@@ -71,7 +71,7 @@ async def op(_, m :Message):
             keyboard = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("🗯 Channel", url="https://t.me/Tech_Shreyansh"),
+                        InlineKeyboardButton("🗯 Channel", url="https://t.me/Tech_Shreyansh1"),
                         InlineKeyboardButton("💬 Support", url="https://t.me/Tech_Shreyansh2")
                     ],[
                         InlineKeyboardButton("➕ Add me to your Chat ➕", url="https://t.me/StarkApprovedBot?startgroup")
@@ -143,7 +143,7 @@ async def chk(_, cb: CallbackQuery):
             await cb.answer(
                 "🔒 Access Denied!\n\n"
                 "👉 You must join our channel first to use this bot.\n"
-                "📢 Channel: @Tech_Shreyansh",
+                "📢 Channel: @Tech_Shreyansh1",
                 show_alert=True
             )
             return
