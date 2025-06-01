@@ -41,7 +41,7 @@ async def approve(_, m : Message):
         keyboard = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("📢 Updated Channel", url="https://t.me/Tech_Shreyansh")
+                    InlineKeyboardButton("📢 Updated Channel", url="https://t.me/Tech_Shreyansh1")
                 ]
             ]
         )
