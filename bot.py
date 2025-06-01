@@ -134,18 +134,36 @@ The bot does not store or share personal data beyond what's needed for join requ
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Callback ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @app.on_callback_query(filters.regex("chk"))
-async def chk(_, cb : CallbackQuery):
+async def chk(_, cb: CallbackQuery):
     try:
-        # First check if CHID is valid
         try:
             chat = await app.get_chat(cfg.CHID)
             await app.get_chat_member(cfg.CHID, cb.from_user.id)
         except ValueError:
-            await cb.answer("❌ Join My Channel: To Use This Bot", show_alert=True)
+            await cb.answer(
+                "🔒 Access Denied!\n\n"
+                "👉 You must join our channel first to use this bot.\n"
+                "📢 Channel: @Tech_Shreyansh",
+                show_alert=True
+            )
             return
         except Exception as e:
             print(f"Error checking membership: {e}")
             raise UserNotParticipant
+            
+        if cb.message.chat.type == enums.ChatType.PRIVATE:
+            keyboard = InlineKeyboardMarkup([...])  # Keep your existing keyboard
+            add_user(cb.from_user.id)
+            await cb.message.edit(...)  # Keep your existing edit
+        print(f"{cb.from_user.first_name} started your bot!")
+        
+    except UserNotParticipant:
+        await cb.answer(
+            "❌ Verification Failed!\n\n"
+            "You haven't joined our channel yet.\n"
+            "Please join @Tech_Shreyansh and try again.",
+            show_alert=True
+        )
             
         if cb.message.chat.type == enums.ChatType.PRIVATE:
             keyboard = InlineKeyboardMarkup(
