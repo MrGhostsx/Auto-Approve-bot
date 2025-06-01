@@ -56,6 +56,16 @@ FSUB=Tech_Shreyansh
 MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>?retryWrites=true&w=majority&tls=true
 SUDO=241845268
 ```
+
+## 🏷 Command
+
+```
+start - To Start the Bot ⚡️ 
+disclaimer - To View Disclaimer 🐬
+users - Check bot stats 📊
+bcast - Broadcast a message to all users 📢
+cast - Forward a message to all users 📤
+```
   
 ### 💫 Credits
  - [Mr.Ghosts](https://github.com/MrGhostsx) for pyrogram
