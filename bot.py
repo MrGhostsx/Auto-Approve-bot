@@ -37,7 +37,6 @@ async def approve(_, m : Message):
         add_group(m.chat.id)
         await app.approve_chat_join_request(op.id, kk.id)
         img = random.choice(gif)
-        # Add an inline keyboard button for "Updated Channel"
         keyboard = InlineKeyboardMarkup(
             [
                 [
@@ -47,7 +46,7 @@ async def approve(_, m : Message):
         )
         await app.send_video(kk.id, img, f"**Hello {kk.mention}!\nWelcome To {op.title}\n\nClick /start to know more.\n\n__Powerd By : @Tech_Shreyansh29__**", reply_markup=keyboard)
         add_user(kk.id)
-    except errors.PeerIdInvalid as e:
+    except errors.PeerIdInvalid:
         print("User hasn't started the bot (private chat).")
     except Exception as err:
         print(str(err))    
@@ -57,7 +56,17 @@ async def approve(_, m : Message):
 @app.on_message(filters.command("start"))
 async def op(_, m :Message):
     try:
-        await app.get_chat_member(cfg.CHID, m.from_user.id) 
+        # First check if CHID is valid
+        try:
+            chat = await app.get_chat(cfg.CHID)
+            await app.get_chat_member(cfg.CHID, m.from_user.id)
+        except ValueError:
+            # If CHID is invalid, skip the membership check
+            raise UserNotParticipant
+        except Exception as e:
+            print(f"Error checking membership: {e}")
+            raise UserNotParticipant
+            
         if m.chat.type == enums.ChatType.PRIVATE:
             keyboard = InlineKeyboardMarkup(
                 [
@@ -72,7 +81,7 @@ async def op(_, m :Message):
             add_user(m.from_user.id)
             await m.reply_photo("https://telegra.ph/file/a782e3bbbe40df8a4bb67.jpg", caption="**🦊 Hello {}!\nI'm an auto approve [Admin Join Requests]({}) Bot.\nI can approve users in Groups/Channels.Add me to your chat and promote me to admin with add members permission.\n\n__Powerd By : @Tech_Shreyansh29__**".format(m.from_user.mention, "https://t.me/telegram/153"), reply_markup=keyboard)
     
-        elif m.chat.type == enums.ChatType.GROUP or enums.ChatType.SUPERGROUP:
+        elif m.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
             keyboar = InlineKeyboardMarkup(
                 [
                     [
@@ -116,7 +125,7 @@ Channel/Group admins are fully responsible for moderation. The bot only accepts 
 The bot does not control, monitor, or endorse any messages, media, or content posted in the group/channel. The channel admins and users are solely responsible for all content shared. The bot owner & developers cannot be held accountable for any violations, illegal content, or disputes arising in the channel/group.
 
 🔒 **Privacy Notice**
-The bot does not store or share personal data beyond what’s needed for join request processing.
+The bot does not store or share personal data beyond what's needed for join request processing.
 
 📌 **Ensure responsible usage to keep your channel/group secure!**
     """
@@ -127,7 +136,17 @@ The bot does not store or share personal data beyond what’s needed for join re
 @app.on_callback_query(filters.regex("chk"))
 async def chk(_, cb : CallbackQuery):
     try:
-        await app.get_chat_member(cfg.CHID, cb.from_user.id)
+        # First check if CHID is valid
+        try:
+            chat = await app.get_chat(cfg.CHID)
+            await app.get_chat_member(cfg.CHID, cb.from_user.id)
+        except ValueError:
+            await cb.answer("❌ Bot configuration error: Invalid channel ID", show_alert=True)
+            return
+        except Exception as e:
+            print(f"Error checking membership: {e}")
+            raise UserNotParticipant
+            
         if cb.message.chat.type == enums.ChatType.PRIVATE:
             keyboard = InlineKeyboardMarkup(
                 [
@@ -143,7 +162,7 @@ async def chk(_, cb : CallbackQuery):
             await cb.message.edit("**🦊 Hello {}!\nI'm an auto approve [Admin Join Requests]({}) Bot.\nI can approve users in Groups/Channels.Add me to your chat and promote me to admin with add members permission.\n\n__Powerd By : @Tech_Shreyansh29__**".format(cb.from_user.mention, "https://t.me/telegram/153"), reply_markup=keyboard, disable_web_page_preview=True)
         print(cb.from_user.first_name +" Is started Your Bot!")
     except UserNotParticipant:
-        await cb.answer("🙅‍♂️ You are not joined to channel join and try again. 🙅‍♂️")
+        await cb.answer("🙅‍♂️ You are not joined to channel join and try again. 🙅‍♂️", show_alert=True)
 
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Info ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -171,7 +190,6 @@ async def bcast(_, m : Message):
     for usrs in allusers.find():
         try:
             userid = usrs["user_id"]
-            #print(int(userid))
             if m.command[0] == "bcast":
                 await m.reply_to_message.copy(int(userid))
             success +=1
@@ -203,7 +221,6 @@ async def fcast(_, m : Message):
     for usrs in allusers.find():
         try:
             userid = usrs["user_id"]
-            #print(int(userid))
             if m.command[0] == "fcast":
                 await m.reply_to_message.forward(int(userid))
             success +=1
