@@ -141,7 +141,7 @@ async def chk(_, cb : CallbackQuery):
             chat = await app.get_chat(cfg.CHID)
             await app.get_chat_member(cfg.CHID, cb.from_user.id)
         except ValueError:
-            await cb.answer("❌ Bot configuration error: Invalid channel ID", show_alert=True)
+            await cb.answer("❌ Join My Channel: To Use This Bot", show_alert=True)
             return
         except Exception as e:
             print(f"Error checking membership: {e}")
