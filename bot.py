@@ -152,24 +152,10 @@ async def chk(_, cb: CallbackQuery):
             raise UserNotParticipant
             
         if cb.message.chat.type == enums.ChatType.PRIVATE:
-            keyboard = InlineKeyboardMarkup([...])  # Keep your existing keyboard
-            add_user(cb.from_user.id)
-            await cb.message.edit(...)  # Keep your existing edit
-        print(f"{cb.from_user.first_name} started your bot!")
-        
-    except UserNotParticipant:
-        await cb.answer(
-            "❌ Verification Failed!\n\n"
-            "You haven't joined our channel yet.\n"
-            "Please join @Tech_Shreyansh and try again.",
-            show_alert=True
-        )
-            
-        if cb.message.chat.type == enums.ChatType.PRIVATE:
             keyboard = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("🗯 Channel", url="https://t.me/Tech_Shreyansh"),
+                        InlineKeyboardButton("🗯 Channel", url="https://t.me/Tech_Shreyansh1"),
                         InlineKeyboardButton("💬 Support", url="https://t.me/Tech_Shreyansh2")
                     ],[
                         InlineKeyboardButton("➕ Add me to your Chat ➕", url="https://t.me/StarkApprovedBot?startgroup")
